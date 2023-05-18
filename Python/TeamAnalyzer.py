@@ -2,7 +2,7 @@ import sqlite3  # This is the package for all sqlite3 access in Python
 import sys      # This helps with command-line parameters
 
 # open the database connection and create a cursor object
-pokemon = sqlite3.connect("../pokemon.sqlite")
+pokemon = sqlite3.connect("pokemon.sqlite")
 con = pokemon.cursor()
 
 # execute python script: python3 TeamAnalyzer.py 1 2 3 4 5 6
@@ -34,28 +34,32 @@ for i, arg in enumerate(sys.argv):
     # get the types of the Pokemon from the "pokemon_types_view" table
     query = f"select type1, type2 from pokemon_types_view where name = '{name}'"
     con.execute(query)
-    result = con.fetchone()
-    type1 = result[0]
-    type2 = result[1]
+    type = con.fetchone()
+    type1 = type[0]
+    type2 = type[1]
 
     #get the "against" values from the "pokemon_types_battle_view" table
     query= f"select * from pokemon_types_battle_view where type1name = '{type1}'and type2name= '{type2}'"
-    con.execute(query)
-    result = con.fetchone()
+    #con.execute(query)
+    #result = con.fetchone()
+    against = con.execute(query).fetchone()
 
     # determine which types are strong or weak against the Pokemon based on the "against" value
     strong_against = []
     weak_against = []
-    for t in types:
-        against_value = result[f"against_{t}"]
-        if against_value > 1:
-            strong_against.append(t)
-        elif against_value < 1:
-            weak_against.append(t)
+    for i, t in enumerate(against):
+        if i == 0 or i == 1:
+            continue
+        if t > 1:
+            strong_against.append(types[i-2])
+        if t < 1:
+            weak_against.append(types[i - 2])
+    
     # add the pokemon and its strong/weak types to the team list
     team.append({"name": name, "strong":strong_against, "weak": weak_against})
     # print the analysis for the pokemon
-    print(f"{name}: strong against {', '.join(strong_against)}; weak against {', '.join(weak_against)}")
+    #print(f"{name}: strong against {', '(strong_against)}; weak against {', '(weak_against)}")
+    print (name + "type: " + type1 + type2 + "strong: " + str(strong_against) + "weak: " + str(weak_against))
 
 
 # ask the user if they want to save the team

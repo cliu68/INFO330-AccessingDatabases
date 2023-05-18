@@ -1,7 +1,7 @@
 import sqlite3
 import sys
 
-pokemon = sqlite3.connect("../pokemon.sqlite")
+pokemon = sqlite3.connect("pokemon.sqlite")
 con = pokemon.cursor()
 
 types = ["bug", "dark", "dragon", "electric", "fairy", "fight", "fire", "flying", "ghost", "grass", "ground", "ice", "normal", "poison", "psychic", "rock", "steel", "water"]
@@ -33,13 +33,12 @@ for i, arg in enumerate(sys.argv):
 
     strong_against = []
     weak_against = []
-    for t in types:
-        against_column = f"against_{t}"
-        against_value = result[result.description.index((against_column,))]
+    for i in range(2, len(result)):
+        against_value = result[i]
         if against_value > 1:
-            strong_against.append(t)
+            strong_against.append(types[i - 2])
         elif against_value < 1:
-            weak_against.append(t)
+            weak_against.append(types[i - 2])
 
     team.append({"name": name, "strong": strong_against, "weak": weak_against})
     print(f"{name}: strong against {', '.join(strong_against)}; weak against {', '.join(weak_against)}")
