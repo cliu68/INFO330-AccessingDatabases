@@ -1,4 +1,3 @@
-
 import sqlite3  # This is the package for all sqlite3 access in Python
 import sys      # This helps with command-line parameters
 
@@ -32,8 +31,8 @@ for i, arg in enumerate(sys.argv):
     name = result[0]
 
 
-    # get the types of the Pokemon from the "pokemon_type_view" table
-    query = f"select type1, type2 from pokemon_type_view where name = '{name}'"
+    # get the types of the Pokemon from the "pokemon_types_view" table
+    query = f"select type1, type2 from pokemon_types_view where name = '{name}'"
     con.execute(query)
     result = con.fetchone()
     type1 = result[0]
@@ -70,3 +69,6 @@ else:
     print("Bye for now!")
 
 # run it in command line: python TeamAnalyzer.py 1 2 3 4 5 6
+
+
+
